@@ -22,6 +22,7 @@ import { createTrailersPanel } from './settings/trailersPage.js';
 import { createCinemaPreRollPanel } from './settings/cinemaPreRollPage.js';
 import { createProfileChooserPanel } from './settings/profileChooserPage.js';
 import { createWatchlistPanel } from './settings/watchlistPage.js';
+import { createLeavingSoonPanel } from './settings/leavingSoonPage.js';
 import { createParentalPinPanel } from './settings/parentalPinPage.js';
 import { createDbManagementPanel } from './settings/dbManagementPage.js';
 import { createDetailsModalPanel } from './settings/detailsModalPage.js';
@@ -152,6 +153,7 @@ export function createSettingsModal() {
     const profileChooserTab = createTab('profile-chooser', 'fa-user-group', labels.profileChooserHeader || 'Configurações de Quem Está Assistindo');
     const pauseTab = createTab('pause', 'fa-pause', labels.pauseSettings || 'Configurações da Tela de Pausa');
     const watchlistSettingsTab = createTab('watchlist-settings', 'fa-bookmark', labels.watchlistSettingsTab || 'Configurações da Lista de Reprodução');
+    const leavingSoonTab = createTab('leaving-soon', 'fa-hourglass-half', labels.leavingSoonTab || 'Saindo do Catálogo');
     const hoverTab = createTab('hover', 'fa-play-circle', labels.hoverTrailer || 'Configurações de Prévia ao Passar o Mouse');
     const cinemaPreRollTab = createTab('cinema-preroll', 'fa-clapperboard', labels.cinemaPreRollTab || 'Sinema Ön Gösterimleri');
     const trailersTab = createTab('trailers', 'fa-video', labels.trailersHeader || 'Configurações de Download de Trailers / NFO');
@@ -167,7 +169,7 @@ export function createSettingsModal() {
 
     const tabs = [
         mainTab, sliderTab, queryTab, musicTab, studioTab, profileChooserTab,
-        pauseTab, watchlistSettingsTab, hoverTab, cinemaPreRollTab, trailersTab, notificationsTab, detailsModalTab,
+        pauseTab, watchlistSettingsTab, leavingSoonTab, hoverTab, cinemaPreRollTab, trailersTab, notificationsTab, detailsModalTab,
         avatarTab, parentalPinTab, positionTab, dbManagementTab, exporterTab
     ].filter(Boolean);
     tabContainer.append(...tabs);
@@ -198,6 +200,7 @@ export function createSettingsModal() {
     const notificationsPanel = createNotificationsPanel(config, labels);
     const detailsModalPanel = createDetailsModalPanel(config, labels);
     const watchlistSettingsPanel = createWatchlistPanel(config, labels);
+    const leavingSoonPanel = createLeavingSoonPanel(config, labels);
     const dbManagementPanel = createDbManagementPanel(config, labels);
     const parentalPinPanel = config?.currentUserIsAdmin
       ? createParentalPinPanel(config, labels)
@@ -231,7 +234,7 @@ export function createSettingsModal() {
 
     [
         mainPanel, sliderPanel, queryPanel, musicPanel, studioPanel, profileChooserPanel,
-        pausePanel, watchlistSettingsPanel, hoverPanel, cinemaPreRollPanel, trailersPanel, notificationsPanel, detailsModalPanel,
+        pausePanel, watchlistSettingsPanel, leavingSoonPanel, hoverPanel, cinemaPreRollPanel, trailersPanel, notificationsPanel, detailsModalPanel,
         avatarPanel, parentalPinPanel, positionPanel, dbManagementPanel, exporterPanel
     ].filter(Boolean).forEach(panel => {
         panel.style.display = 'none';
@@ -240,14 +243,14 @@ export function createSettingsModal() {
 
     const panels = [
         mainPanel, sliderPanel, queryPanel, musicPanel, studioPanel, profileChooserPanel,
-        pausePanel, watchlistSettingsPanel, hoverPanel, cinemaPreRollPanel, trailersPanel, notificationsPanel, detailsModalPanel,
+        pausePanel, watchlistSettingsPanel, leavingSoonPanel, hoverPanel, cinemaPreRollPanel, trailersPanel, notificationsPanel, detailsModalPanel,
         avatarPanel, parentalPinPanel, positionPanel, dbManagementPanel, exporterPanel
     ].filter(Boolean);
     tabContent.append(...panels);
 
     const interactiveTabs = [
         mainTab, sliderTab, queryTab, musicTab, studioTab, profileChooserTab,
-        pauseTab, watchlistSettingsTab, hoverTab, cinemaPreRollTab, trailersTab, notificationsTab, detailsModalTab,
+        pauseTab, watchlistSettingsTab, leavingSoonTab, hoverTab, cinemaPreRollTab, trailersTab, notificationsTab, detailsModalTab,
         avatarTab, parentalPinTab, positionTab, dbManagementTab, exporterTab
     ].filter(Boolean);
     interactiveTabs.forEach(tab => {

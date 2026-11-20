@@ -16,7 +16,7 @@ namespace Jellyfin.Plugin.JMSFusion
     {
         public override string Name => "FlepFlixFyn";
         public override Guid Id => Guid.Parse("d9b7f2a1-3c4e-4f80-b6d2-9e1a5c0f8b34");
-        public override string Description => "Plugin FlepFlixFyn — Injeta experiência visual premium no Jellyfin com tema roxo, layout Netflix e localização PT-BR completa. Fork de JMSFusion por ONeithan.";
+        public override string Description => "Plugin FlepFlixFyn — Injeta experiência visual premium no Jellyfin com tema roxo, layout Netflix e localização PT-BR completa. Desenvolvido por lucas-TagDev (baseado no JMSFusion).";
 
         private readonly ILogger<JMSFusionPlugin> _logger;
         private readonly IApplicationPaths _paths;

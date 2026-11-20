@@ -495,7 +495,7 @@ export function createAboutPanel(labels) {
         Expressamos nossa eterna admiração e profunda gratidão pelo seu incrível trabalho open-source, que serviu como a fundação estrutural para este ecossistema.
       </p>
       <p style="margin: 0 0 12px 0;">
-        Esta edição personalizada (FlepFlixFyn Edition) foi projetada, customizada e refinada por <strong>ONeithan</strong>, introduzindo 
+        Esta edição personalizada (FlepFlixFyn Edition) é desenvolvida por <strong>lucas-TagDev</strong>, a partir do fork de ONeithan,, introduzindo 
         tradução absoluta para Português do Brasil, otimização de performance no carregamento, correções profundas de layout de UX, 
         estilizações premium sob a identidade visual roxa e melhorias exclusivas de acessibilidade e controle.
       </p>
@@ -504,10 +504,14 @@ export function createAboutPanel(labels) {
     <div class="jms-env-box" style="margin-top: 15px; border-top: 1px solid rgba(168, 85, 247, 0.3); padding-top: 20px; display: flex; flex-direction: column; gap: 12px;">
       <div class="jms-env-item" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(168, 85, 247, 0.15); padding-bottom: 8px;">
         <span class="jms-env-label" style="color: #94a3b8; font-size: 0.9em;">Versão do Fork</span>
-        <code style="background: rgba(168, 85, 247, 0.2); padding: 3px 8px; border-radius: 4px; color: #fff; font-size: 0.85em;">1.0.0.9 (FlepFlixFyn Edition)</code>
+        <code style="background: rgba(168, 85, 247, 0.2); padding: 3px 8px; border-radius: 4px; color: #fff; font-size: 0.85em;">1.0.1.0 (FlepFlixFyn Edition)</code>
       </div>
       <div class="jms-env-item" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(168, 85, 247, 0.15); padding-bottom: 8px;">
-        <span class="jms-env-label" style="color: #94a3b8; font-size: 0.9em;">Autor do Fork</span>
+        <span class="jms-env-label" style="color: #94a3b8; font-size: 0.9em;">Desenvolvedor</span>
+        <strong style="color: #fff; font-size: 0.95em;">lucas-TagDev</strong>
+      </div>
+      <div class="jms-env-item" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(168, 85, 247, 0.15); padding-bottom: 8px;">
+        <span class="jms-env-label" style="color: #94a3b8; font-size: 0.9em;">Fork anterior</span>
         <strong style="color: #fff; font-size: 0.95em;">ONeithan</strong>
       </div>
       <div class="jms-env-item" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(168, 85, 247, 0.15); padding-bottom: 8px;">
@@ -517,7 +521,7 @@ export function createAboutPanel(labels) {
       <div class="jms-env-item" style="display: flex; flex-direction: column; gap: 8px;">
         <span class="jms-env-label" style="color: #94a3b8; font-size: 0.9em;">Links Oficiais</span>
         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px;">
-          <a href="https://github.com/lucas-TagDev/FlepFlixFyn" target="_blank" style="flex: 1; text-align: center; text-decoration: none; background: rgba(168, 85, 247, 0.3); color: #fff; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(168, 85, 247, 0.5); font-weight: bold; font-size: 0.85em; transition: background 0.2s;">Repositório do Fork (ONeithan)</a>
+          <a href="https://github.com/lucas-TagDev/FlepFlixFyn" target="_blank" style="flex: 1; text-align: center; text-decoration: none; background: rgba(168, 85, 247, 0.3); color: #fff; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(168, 85, 247, 0.5); font-weight: bold; font-size: 0.85em; transition: background 0.2s;">Repositório FlepFlixFyn (lucas-TagDev)</a>
           <a href="https://github.com/G-grbz/Jellyfin-Media-Slider" target="_blank" style="flex: 1; text-align: center; text-decoration: none; background: rgba(30, 41, 59, 0.5); color: #cbd5e1; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; font-size: 0.85em; transition: background 0.2s;">Repositório Original (G-Grbz)</a>
         </div>
       </div>

@@ -379,6 +379,7 @@ function getSectionState(source = null) {
     genreHubs: runtime.enableGenreHubs !== false,
     directorRows: runtime.enableDirectorRows !== false,
     studioHubs: runtime.enableStudioHubs !== false,
+    leavingSoonRows: runtime.enableLeavingSoonRows === true,
   };
 }
 
@@ -422,6 +423,7 @@ export function getManagedSectionDependencyKeys(targetKey, source = null, { excl
 function hasSectionReady(key) {
   try {
     if (key === "studioHubs") return window.__jmsStudioHubsReady === true;
+    if (key === "leavingSoonRows") return window.__jmsLeavingSoonRowsDone === true;
     if (key === "top10SeriesRows") return window.__jmsTop10SeriesRowsDone === true;
     if (key === "top10MovieRows") return window.__jmsTop10MovieRowsDone === true;
     if (key === "tmdbTopMoviesRows") return window.__jmsTmdbTopMoviesRowsDone === true;
@@ -441,6 +443,7 @@ function hasSectionReady(key) {
 
 function getSectionReadyEvents(key) {
   if (key === "studioHubs") return ["jms:studio-hubs-ready"];
+  if (key === "leavingSoonRows") return ["jms:leaving-soon-rows-done"];
   if (key === "top10SeriesRows") return ["jms:top10-series-rows-done"];
   if (key === "top10MovieRows") return ["jms:top10-movie-rows-done"];
   if (key === "tmdbTopMoviesRows") return ["jms:tmdb-top-movie-rows-done"];
@@ -485,6 +488,13 @@ function hasRenderableManagedSections(prefix = "", selector = "") {
 }
 
 function hasSectionRenderableContent(key) {
+  if (key === "leavingSoonRows") {
+    return hasRenderableManagedSections(
+      "leaving-soon-rows--",
+      ".leaving-soon-section .personal-recs-card"
+    );
+  }
+
   if (key === "studioHubs") {
     return hasRenderableCards(
       document.getElementById("studio-hubs"),
@@ -595,6 +605,7 @@ function isSectionReadyForGate(key) {
 function hasSectionCompleted(key) {
   try {
     if (key === "studioHubs") return window.__jmsStudioHubsReady === true;
+    if (key === "leavingSoonRows") return window.__jmsLeavingSoonRowsDone === true;
     if (key === "top10SeriesRows") return window.__jmsTop10SeriesRowsDone === true;
     if (key === "top10MovieRows") return window.__jmsTop10MovieRowsDone === true;
     if (key === "tmdbTopMoviesRows") return window.__jmsTmdbTopMoviesRowsDone === true;
@@ -612,6 +623,7 @@ function hasSectionCompleted(key) {
 
 function getSectionCompletionEvents(key) {
   if (key === "studioHubs") return ["jms:studio-hubs-ready"];
+  if (key === "leavingSoonRows") return ["jms:leaving-soon-rows-done"];
   if (key === "top10SeriesRows") return ["jms:top10-series-rows-done"];
   if (key === "top10MovieRows") return ["jms:top10-movie-rows-done"];
   if (key === "tmdbTopMoviesRows") return ["jms:tmdb-top-movie-rows-done"];
@@ -1233,6 +1245,9 @@ function getBecauseYouWatchedSections() {
 }
 
 function resolveAnchorElementByKey(key) {
+  if (key === "leavingSoonRows") {
+    return getManagedSectionTail("leaving-soon-rows--");
+  }
   if (key === "top10SeriesRows") {
     return getManagedSectionTail("top10-series-rows--");
   }

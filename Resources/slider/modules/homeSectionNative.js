@@ -1,6 +1,7 @@
 import {
   getConfig,
   isNativeHomeSectionOrderKey,
+  normalizeDisabledHomeSections,
   normalizeManagedHomeSectionOrder
 } from "./config.js";
 
@@ -16,7 +17,8 @@ const MANAGED_HOME_SECTION_IDS = new Set([
   "recent-rows",
   "continue-rows",
   "nextup-rows",
-  "because-you-watched"
+  "because-you-watched",
+  "leaving-soon-rows"
 ]);
 const MANAGED_HOME_SECTION_PREFIXES = Object.freeze([
   ["because-you-watched--", "becauseYouWatched"],
@@ -29,6 +31,7 @@ const MANAGED_HOME_SECTION_PREFIXES = Object.freeze([
   ["top10-movie-rows--", "top10MovieRows"],
   ["tmdb-top-movie-rows--", "tmdbTopMoviesRows"],
   ["tmdb-trailer-rows--", "tmdbTrailerRows"],
+  ["leaving-soon-rows--", "leavingSoonRows"],
 ]);
 const NATIVE_HOME_SECTION_SNAPSHOT_KEY = "jms:managedHomeSectionNativeSnapshot:v1";
 const NATIVE_TITLE_SELECTORS = [
@@ -169,6 +172,8 @@ function isGenericNativeHomeSectionLabel(label) {
 
 function isHiddenNativeHomeSection(el) {
   if (!el?.isConnected) return true;
+  // Seção escondida pelo próprio usuário (interruptor da ordenação): continua listada para poder ser reativada.
+  if (el.dataset?.jmsSectionDisabled === "1") return false;
   if (el.hidden) return true;
   if (el.getAttribute?.("aria-hidden") === "true") return true;
   if (el.classList?.contains("hide") || el.classList?.contains("hidden")) return true;
@@ -423,6 +428,7 @@ export function keepManagedSectionsBelowNative(container) {
         : (order.length + originalIndex);
       return {
         element: child,
+        key: meta.key,
         baseOrder,
         subOrder: meta.subOrder,
         originalIndex
@@ -436,11 +442,14 @@ export function keepManagedSectionsBelowNative(container) {
       : (order.length + originalIndex);
     return {
       element: child,
+      key: nativeKey,
       baseOrder,
       subOrder: 0,
       originalIndex
     };
   });
+
+  applyDisabledHomeSections(entries);
 
   if (!entries.length) return;
 
@@ -461,6 +470,29 @@ export function keepManagedSectionsBelowNative(container) {
       container.insertBefore(section, container.firstElementChild);
     }
     anchor = section;
+  }
+}
+
+function applyDisabledHomeSections(entries) {
+  let disabled;
+  try {
+    disabled = new Set(normalizeDisabledHomeSections(getConfig?.()?.disabledHomeSections));
+  } catch {
+    disabled = new Set();
+  }
+  for (const entry of entries) {
+    const el = entry?.element;
+    if (!el) continue;
+    const off = !!entry.key && disabled.has(entry.key);
+    if (off) {
+      if (el.dataset.jmsSectionDisabled !== "1") {
+        el.dataset.jmsSectionDisabled = "1";
+        el.style.setProperty("display", "none", "important");
+      }
+    } else if (el.dataset.jmsSectionDisabled === "1") {
+      delete el.dataset.jmsSectionDisabled;
+      el.style.removeProperty("display");
+    }
   }
 }
 

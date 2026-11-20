@@ -2,12 +2,20 @@
   {
     "guid": "d9b7f2a1-3c4e-4f80-b6d2-9e1a5c0f8b34",
     "name": "FlepFlixFyn",
-    "description": "A experiência visual definitiva e industrial para seu Jellyfin — 100% PT-BR e Tema Roxo FlepFlixFyn. Fork de JMSFusion por ONeithan.",
+    "description": "A experiência visual definitiva e industrial para seu Jellyfin — 100% PT-BR e Tema Roxo FlepFlixFyn. Desenvolvido por lucas-TagDev (baseado no JMSFusion).",
     "overview": "Motor visual premium com suporte nativo a PT-BR e identidade FlepFlixFyn.",
-    "owner": "ONeithan",
+    "owner": "lucas-TagDev",
     "category": "General",
     "imageUrl": "https://raw.githubusercontent.com/lucas-TagDev/FlepFlixFyn/main/img/flepflixfyn-logo.png",
     "versions": [
+      {
+        "version": "1.0.1.0",
+        "changelog": "v1.0.1.0 - Saindo do Catálogo e controle das seções\n- Nova aba Saindo do Catálogo: monte seções na página inicial (ex.: filmes e séries) com os títulos que vão sair do catálogo.\n- Busque, marque e adicione títulos; escolha uma mensagem para cada um (ex.: Última semana para aproveitar) e uma data de saída opcional.\n- Títulos com data de saída vencida somem sozinhos.\n- Interruptor Ativada/Desativada para cada seção no Layout das Seções da Página Inicial, inclusive as seções nativas do Jellyfin.\n- Desenvolvedor: lucas-TagDev.",
+        "targetAbi": "12.0.0.0",
+        "sourceUrl": "https://github.com/lucas-TagDev/FlepFlixFyn/releases/download/v1.0.1.0/FlepFlixFyn-1.0.1.0.zip",
+        "checksum": "5863e228f8d677d07e091dd81c574c82",
+        "timestamp": "2026-11-21T00:00:00Z"
+      },
       {
         "version": "1.0.0.9",
         "changelog": "v1.0.0.9 - Nova identidade FlepFlixFyn\n- Plugin renomeado de Nexus PobreFlix para FlepFlixFyn.\n- Nova logo FlepFlix no cabeçalho, tela de login, tela de carregamento e ícone do plugin.\n- Repositório próprio: github.com/lucas-TagDev/FlepFlixFyn.\n- Inclui todas as melhorias da v1.0.0.8.",

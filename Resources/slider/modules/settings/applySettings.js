@@ -1,4 +1,4 @@
-import { getAdminTargetProfile, getConfig, getDeviceProfileAuto, normalizeManagedCardTitleDisplayMode, normalizeManagedHomeSectionOrder, normalizeSettingsHotkey, publishAdminSnapshotIfForced, SETTINGS_HOTKEY_DEFAULT } from "../config.js";
+import { getAdminTargetProfile, getConfig, getDeviceProfileAuto, normalizeDisabledHomeSections, normalizeManagedCardTitleDisplayMode, normalizeManagedHomeSectionOrder, normalizeSettingsHotkey, publishAdminSnapshotIfForced, SETTINGS_HOTKEY_DEFAULT } from "../config.js";
 import { updateConfig } from "../configPersistence.js";
 import { loadCSS } from "../playerStyles.js";
 import { updateSlidePosition } from '../positionUtils.js';
@@ -333,6 +333,11 @@ const USER_ONLY_KEYS = [
           } catch {
             return normalizeManagedHomeSectionOrder(config?.managedHomeSectionOrder);
           }
+        })();
+        const disabledHomeSectionsValue = (() => {
+          const raw = formData.get('disabledHomeSections');
+          if (raw === null || raw === undefined) return normalizeDisabledHomeSections(config?.disabledHomeSections);
+          return normalizeDisabledHomeSections(raw);
         })();
         const sapEnabled = formData.get('sapEnabled') === 'on';
         const sapBlurMin = _clamp(
@@ -690,6 +695,7 @@ const USER_ONLY_KEYS = [
               : undefined,
             studioHubsHidden: useGlobalStudioHubsVisibility ? studioHubsHiddenValue : undefined,
             managedHomeSectionOrder: managedHomeSectionOrderValue,
+            disabledHomeSections: disabledHomeSectionsValue,
 
             enableGenreHubs: formData.get('enableGenreHubs') === 'on',
             showGenreHubsHeroCards: formData.get('showGenreHubsHeroCards') === 'on',
@@ -1145,6 +1151,15 @@ const USER_ONLY_KEYS = [
           try { mountDirectorRowsLazy?.({ force: true }); } catch {}
           try { mountRecentRowsLazy?.({ force: true }); } catch {}
           try { ensureStudioHubsMounted?.({ eager: true, force: true }); } catch {}
+          try {
+            const { mountLeavingSoonRowsLazy } = await import("../leavingSoonRows.js");
+            mountLeavingSoonRowsLazy?.({ force: true });
+          } catch {}
+          try {
+            document.querySelectorAll(".homeSectionsContainer").forEach((container) => {
+              container.__jmsManagedBelowNativeSchedule?.();
+            });
+          } catch {}
         } catch {}
       }, 0);
     }

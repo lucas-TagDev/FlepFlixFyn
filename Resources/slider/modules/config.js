@@ -10,6 +10,7 @@ const CINEMA_PREROLL_START_FULLSCREEN_DEFAULT = false;
 export const DEFAULT_MANAGED_HOME_SECTION_ORDER = Object.freeze([
   "studioHubs",
   "personalRecommendations",
+  "leavingSoonRows",
   "top10SeriesRows",
   "top10MovieRows",
   "tmdbTopMoviesRows",
@@ -24,6 +25,25 @@ export const DEFAULT_MANAGED_HOME_SECTION_ORDER = Object.freeze([
 export const NATIVE_HOME_SECTION_ORDER_PREFIX = "native:";
 
 const MANAGED_HOME_SECTION_ORDER_SET = new Set(DEFAULT_MANAGED_HOME_SECTION_ORDER);
+
+/** Lista de seções da página inicial que o usuário desativou na tela de ordenação. */
+export function normalizeDisabledHomeSections(value = null) {
+  let list = value;
+  if (typeof list === "string") {
+    try { list = JSON.parse(list); } catch { list = list.split(","); }
+  }
+  if (!Array.isArray(list)) return [];
+  const out = [];
+  const seen = new Set();
+  for (const entry of list) {
+    const key = String(entry || "").trim();
+    if (!key || seen.has(key)) continue;
+    if (!MANAGED_HOME_SECTION_ORDER_SET.has(key) && !key.startsWith(NATIVE_HOME_SECTION_ORDER_PREFIX)) continue;
+    seen.add(key);
+    out.push(key);
+  }
+  return out;
+}
 
 const SETTINGS_HOTKEY_ALIASES = new Map([
   [" ", "Space"],
@@ -248,7 +268,9 @@ function ensureImplicitManagedFollowerOrder(out, explicit, anchorKey, followerKe
 
 function buildManagedHomeSectionEnabledMap(cfg = {}) {
   const masterEnabled = cfg?.enableHomeSectionsMaster !== false;
-  return {
+  const disabled = new Set(normalizeDisabledHomeSections(cfg?.disabledHomeSections));
+  const map = {
+    leavingSoonRows: masterEnabled,
     studioHubs: masterEnabled && cfg?.enableStudioHubs !== false,
     personalRecommendations: masterEnabled && cfg?.enablePersonalRecommendations !== false,
     top10SeriesRows: isTop10SeriesRowsSectionEnabled(cfg, masterEnabled),
@@ -262,6 +284,10 @@ function buildManagedHomeSectionEnabledMap(cfg = {}) {
     genreHubs: masterEnabled && cfg?.enableGenreHubs !== false,
     directorRows: masterEnabled && cfg?.enableDirectorRows !== false,
   };
+  for (const key of Object.keys(map)) {
+    if (disabled.has(key)) map[key] = false;
+  }
+  return map;
 }
 
 export function getManagedHomeSectionRuntimeOrder(source = null, { enabledOnly = false } = {}) {
@@ -1076,6 +1102,13 @@ export function getConfig() {
         return [];
       }
     })(),
+    disabledHomeSections: (() => {
+      try {
+        return normalizeDisabledHomeSections(localStorage.getItem('disabledHomeSections'));
+      } catch {
+        return [];
+      }
+    })(),
     managedHomeSectionOrder: (() => {
       try {
         const raw = localStorage.getItem('managedHomeSectionOrder');
@@ -1400,6 +1433,8 @@ export function getHomeSectionsRuntimeConfig(source = null) {
     enableBecauseYouWatched: enabledMap.becauseYouWatched,
     enableGenreHubs: enabledMap.genreHubs,
     enableDirectorRows: enabledMap.directorRows,
+    enableLeavingSoonRows: enabledMap.leavingSoonRows,
+    disabledHomeSections: normalizeDisabledHomeSections(cfg?.disabledHomeSections),
     enableRecentRows: masterEnabled && cfg.enableRecentRows !== false,
     enableRecentRowsSection: enabledMap.recentRows,
     enableContinueRowsSection: enabledMap.continueRows,

@@ -100,6 +100,7 @@ let __detailsModalLoaderPromise = null;
 let __hoverTrailerModulePromise = null;
 let __personalRecommendationsModulePromise = null;
 let __directorRowsModulePromise = null;
+let __leavingSoonRowsModulePromise = null;
 let __recentRowsModulePromise = null;
 let __studioHubsModulePromise = null;
 let __homeSectionChainModulePromise = null;
@@ -1727,6 +1728,22 @@ function loadDirectorRowsModule() {
   return __directorRowsModulePromise || (__directorRowsModulePromise = import("./modules/directorRows.js"));
 }
 
+function loadLeavingSoonRowsModule() {
+  return __leavingSoonRowsModulePromise || (__leavingSoonRowsModulePromise = import("./modules/leavingSoonRows.js"));
+}
+
+function mountLeavingSoonRowsLazyModule(options = {}) {
+  return loadLeavingSoonRowsModule()
+    .then(({ mountLeavingSoonRowsLazy }) => mountLeavingSoonRowsLazy?.(options))
+    .catch(() => {});
+}
+
+function cleanupLeavingSoonRowsLazy() {
+  return loadLeavingSoonRowsModule()
+    .then(({ cleanupLeavingSoonRows }) => cleanupLeavingSoonRows?.())
+    .catch(() => {});
+}
+
 function loadRecentRowsModule() {
   return __recentRowsModulePromise || (__recentRowsModulePromise = import("./modules/recentRows.js"));
 }
@@ -1906,6 +1923,7 @@ function queueManagedHomeSectionCleanup(reason = "unspecified", meta = {}) {
     resetManagedSectionRenderQueueLazy(),
     cleanupRecentRowsLazy(),
     cleanupDirectorRowsLazy(),
+    cleanupLeavingSoonRowsLazy(),
     resetPersonalRecommendationsLazy(),
     cleanupStudioHubsLazy(),
   ]).then((results) => {
@@ -2166,6 +2184,7 @@ async function runManagedHomeSectionRecovery({
     shouldRenderDirectorRowsUi(cfg)
       ? mountDirectorRowsLazyModule()
       : Promise.resolve(),
+    mountLeavingSoonRowsLazyModule(),
   ]);
 
   const statusAfter = getManagedHomeSectionStatus(cfg);
@@ -2240,6 +2259,10 @@ function bootHomeSections(cfg, { eagerStudioHubs = false, forceManagedSections =
     stack: new Error().stack?.split("\n").slice(0, 6).join("\n") || "",
   });
 
+  scheduleHomeSectionMount(seq, () => {
+    void mountLeavingSoonRowsLazyModule({ force: effectiveForceManagedSections });
+  }, 0);
+
   if (sections.studio) {
     scheduleHomeSectionMount(seq, () => {
       void ensureStudioHubsMountedLazy({ eager: eagerStudioHubs });
@@ -2291,6 +2314,7 @@ function kickManagedHomeSectionsNow(
     sections,
   });
 
+  void mountLeavingSoonRowsLazyModule({ force: effectiveForceManagedSections });
   if (sections.studio) {
     void ensureStudioHubsMountedLazy({
       eager: eagerStudioHubs,
@@ -2757,7 +2781,8 @@ function whenFirstSlideReadyOrTimeout(cb, timeoutMs = 7000) {
       homeSectionsConfig.enableContinueMovies ||
       homeSectionsConfig.enableContinueSeries ||
       homeSectionsConfig.enableNextUpRowsSection ||
-      homeSectionsConfig.enableOtherLibRows
+      homeSectionsConfig.enableOtherLibRows ||
+      homeSectionsConfig.enableLeavingSoonRows
     ) || matchesAny([
       '#personal-recommendations',
       '#genre-hubs',

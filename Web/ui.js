@@ -625,7 +625,7 @@
       },
       {
         label: "Recursos Incorporados",
-        value: statusBadge(s.usingEmbedded ? "Sim (FlepFlixFyn Edition v1.0.0.9)" : "Não", "is-good")
+        value: statusBadge(s.usingEmbedded ? "Sim (FlepFlixFyn Edition v1.0.1.0)" : "Não", "is-good")
       },
       {
         label: "Caminho do Player",

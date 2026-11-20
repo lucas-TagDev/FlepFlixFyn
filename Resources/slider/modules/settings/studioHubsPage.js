@@ -2,6 +2,7 @@ import {
   getAdminTargetProfile,
   getDeviceProfileAuto,
   isNativeHomeSectionOrderKey,
+  normalizeDisabledHomeSections,
   normalizeManagedCardTitleDisplayMode,
   normalizeManagedHomeSectionOrder
 } from "../config.js";
@@ -302,6 +303,9 @@ function dedupeDnDItems(items) {
 function getManagedHomeSectionOrderLabel(name, config, labels) {
   if (isNativeHomeSectionOrderKey(name)) {
     return getNativeHomeSectionOrderLabel(name) || name;
+  }
+  if (name === "leavingSoonRows") {
+    return labels?.leavingSoonTab || "Saindo do Catálogo";
   }
   if (name === "studioHubs") {
     return (
@@ -647,6 +651,8 @@ function createDraggableList(id, items, labels, options = {}) {
   const manualEntries = Array.isArray(options.manualEntries) ? options.manualEntries : [];
   const isAdmin = options.isAdmin === true;
   const visibilityDisabled = options.visibilityDisabled === true;
+  const showToggles = options.showToggles === true;
+  const toggledOff = new Set((options.disabledNames || []).map((n) => String(n || "").trim()));
   const dndItems = dedupeDnDItems(items);
 
   const wrap = document.createElement("div");
@@ -671,6 +677,8 @@ function createDraggableList(id, items, labels, options = {}) {
   dndItems.forEach((item) => {
     const name = getDnDItemName(item);
     list.appendChild(createDnDItem(item, labels, {
+      showToggle: showToggles,
+      toggleOn: !toggledOff.has(name),
       enableStudioControls,
       hidden: hiddenNames.has(nameKey(name)),
       isManual: !!findStudioHubManualEntry(manualEntries, name),
@@ -868,6 +876,43 @@ function createDnDItem(name, labels, options = {}) {
 
     li.appendChild(handle);
     li.appendChild(txt);
+
+    if (options.showToggle) {
+      const applyOffStyle = (on) => {
+        li.dataset.enabled = on ? "1" : "0";
+        txt.style.opacity = on ? "" : "0.45";
+        txt.style.textDecoration = on ? "" : "line-through";
+      };
+      const toggleWrap = document.createElement("label");
+      toggleWrap.className = "dnd-toggle";
+      toggleWrap.title = labels?.homeSectionToggleHint || "Exibir esta seção na página inicial";
+      toggleWrap.style.display = "inline-flex";
+      toggleWrap.style.alignItems = "center";
+      toggleWrap.style.gap = "4px";
+      toggleWrap.style.cursor = "pointer";
+      toggleWrap.style.fontSize = "0.85em";
+      toggleWrap.style.whiteSpace = "nowrap";
+      const toggle = document.createElement("input");
+      toggle.type = "checkbox";
+      toggle.className = "dnd-toggle-input";
+      toggle.checked = options.toggleOn !== false;
+      const toggleText = document.createElement("span");
+      const syncText = () => {
+        toggleText.textContent = toggle.checked
+          ? (labels?.homeSectionEnabled || "Ativada")
+          : (labels?.homeSectionDisabled || "Desativada");
+      };
+      syncText();
+      applyOffStyle(toggle.checked);
+      toggle.addEventListener("change", () => {
+        syncText();
+        applyOffStyle(toggle.checked);
+        li.dispatchEvent(new CustomEvent("dnd:toggle", { bubbles: true }));
+      });
+      toggleWrap.append(toggle, toggleText);
+      li.appendChild(toggleWrap);
+    }
+
     li.appendChild(btns);
     return li;
   }
@@ -2957,6 +3002,12 @@ export function createStudioHubsPanel(config, labels) {
   );
   managedOrderSection.appendChild(managedHomeSectionOrderHidden);
 
+  const disabledHomeSectionsHidden = createHiddenInput(
+    'disabledHomeSections',
+    JSON.stringify(normalizeDisabledHomeSections(config.disabledHomeSections))
+  );
+  managedOrderSection.appendChild(disabledHomeSectionsHidden);
+
   const { wrap: managedOrderWrap, list: managedOrderList } = createDraggableList(
     'managedHomeSectionOrderList',
     getManagedHomeSectionOrderItems(config, labels, currentNativeHomeSectionItems),
@@ -2964,10 +3015,28 @@ export function createStudioHubsPanel(config, labels) {
     {
       labelText:
         labels?.managedHomeSectionOrderLabel ||
-        'Ana sayfada görünecek satır sırası'
+        'Ana sayfada görünecek satır sırası',
+      showToggles: true,
+      disabledNames: normalizeDisabledHomeSections(config.disabledHomeSections)
     }
   );
   managedOrderSection.appendChild(managedOrderWrap);
+
+  const toggleHint = document.createElement("div");
+  toggleHint.className = "description-text2";
+  toggleHint.style.margin = "6px 0 0";
+  toggleHint.textContent =
+    labels?.homeSectionToggleDescription ||
+    "Desmarque uma seção para escondê-la da página inicial sem perder a posição dela. Clique em Salvar para aplicar.";
+  managedOrderSection.appendChild(toggleHint);
+
+  managedOrderList.addEventListener("dnd:toggle", () => {
+    const off = [...managedOrderList.querySelectorAll(".dnd-item")]
+      .filter((li) => li.dataset.enabled === "0")
+      .map((li) => String(li.dataset.name || "").trim())
+      .filter(Boolean);
+    disabledHomeSectionsHidden.value = JSON.stringify(normalizeDisabledHomeSections(off));
+  });
 
   const refreshManagedHomeSectionOrder = () => {
     const names = [...managedOrderList.querySelectorAll(".dnd-item")]

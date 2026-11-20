@@ -149,6 +149,9 @@ namespace Jellyfin.Plugin.JMSFusion
         [JsonPropertyName("studioHubVisibilityEntries")]
         public List<StudioHubVisibilityEntry> StudioHubVisibilityEntries { get; set; } = new();
 
+        [JsonPropertyName("leavingSoon")]
+        public LeavingSoonSettings LeavingSoon { get; set; } = new();
+
         [JsonPropertyName("parentalPinRules")]
         public List<ParentalPinRuleEntry> ParentalPinRules { get; set; } = new();
 
@@ -343,6 +346,60 @@ namespace Jellyfin.Plugin.JMSFusion
 
         [JsonPropertyName("updatedAtUtc")]
         public long UpdatedAtUtc { get; set; } = 0;
+    }
+
+    public class LeavingSoonSettings
+    {
+        [JsonPropertyName("messages")]
+        public List<string> Messages { get; set; } = new();
+
+        [JsonPropertyName("sections")]
+        public List<LeavingSoonSection> Sections { get; set; } = new();
+
+        [JsonPropertyName("initialized")]
+        public bool Initialized { get; set; } = false;
+
+        [JsonPropertyName("updatedAtUtc")]
+        public long UpdatedAtUtc { get; set; } = 0;
+    }
+
+    public class LeavingSoonSection
+    {
+        [JsonPropertyName("id")]
+        public string Id { get; set; } = string.Empty;
+
+        [JsonPropertyName("title")]
+        public string Title { get; set; } = string.Empty;
+
+        [JsonPropertyName("itemTypes")]
+        public string ItemTypes { get; set; } = "Movie";
+
+        [JsonPropertyName("enabled")]
+        public bool Enabled { get; set; } = true;
+
+        [JsonPropertyName("items")]
+        public List<LeavingSoonItem> Items { get; set; } = new();
+    }
+
+    public class LeavingSoonItem
+    {
+        [JsonPropertyName("itemId")]
+        public string ItemId { get; set; } = string.Empty;
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = string.Empty;
+
+        [JsonPropertyName("type")]
+        public string? Type { get; set; }
+
+        [JsonPropertyName("year")]
+        public int? Year { get; set; }
+
+        [JsonPropertyName("message")]
+        public string? Message { get; set; }
+
+        [JsonPropertyName("leaveDate")]
+        public string? LeaveDate { get; set; }
     }
 
     public enum OverwritePolicy
