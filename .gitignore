@@ -1,0 +1,26 @@
+# Pastas de Compilacao e Binarios (NUNCA SUBIR)
+bin/
+obj/
+dist's/
+dist_release/
+temp_build/
+*.zip
+
+# Scripts de Automacao e Controle Local
+build.bat
+Sync-ProjectVersion.ps1
+version.txt
+
+# Arquivos de usuario e Cache
+.vs/
+*.user
+*.suo
+*.log
+build.log
+publish/
+*.tmp
+*.cache
+
+# Documentação local do projeto
+docs/
+

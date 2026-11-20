@@ -1,0 +1,46 @@
+/* 
+    FLEPFLIXFYN — Patch de Normalização Visual
+    Baseado em 82 auditorias de prints.
+*/
+
+/* Forçar Fonte Sora Global */
+* {
+    font-family: 'Sora', sans-serif !important;
+}
+
+/* Ocultar Tags de Qualidade em Todo o Jellyfin */
+.mediaSourceIndicator, 
+.mediaInfoItem, 
+.itemExternalId, 
+.quality-badge, 
+.media-info-item,
+.itemTypeIndicator {
+    display: none !important;
+}
+
+/* Alinhamento Industrial das Seções da Home (Apenas no Desktop/Mobile normal) */
+body:not(.layout-tv) .sectionTitleContainer {
+    margin-left: 2% !important;
+    padding-left: 0 !important;
+}
+
+body:not(.layout-tv) .padded-left.padded-right.sectionTitleContainer {
+    padding-left: 0 !important;
+}
+
+/* Estúdios (Studio Hubs) - Ocultar Texto e Focar na Logo (Apenas no Desktop/Mobile normal) */
+body:not(.layout-tv) .hub-title-text,
+body:not(.layout-tv) .studio-hub-title,
+body:not(.layout-tv) .studio-title {
+    display: none !important;
+}
+
+body:not(.layout-tv) .studio-hub-card:hover .hub-title-text {
+    display: none !important;
+}
+
+/* Ajuste de Botões no Modal Fullscreen (Apenas no Desktop/Mobile normal) */
+body:not(.layout-tv) .jmsdm-actions {
+    justify-content: flex-start !important;
+    padding-left: 5% !important;
+}
