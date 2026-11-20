@@ -4539,8 +4539,15 @@ async function initAndRender({ sectionKey = "recentRows", mountState = null } = 
       ? rawTvLibs
       : [{ Id: getTopSeriesParentIds()[0] || "", Name: "Séries" }];
 
+    const liveCfgForLibs = (typeof getConfig === "function" ? getConfig() : null) || config;
+    const disabledTop10Libs = new Set(
+      (Array.isArray(liveCfgForLibs?.disabledTop10SeriesLibraries) ? liveCfgForLibs.disabledTop10SeriesLibraries : [])
+        .map((id) => String(id || "").replace(/-/g, "").toLowerCase())
+    );
+
     targetLibs.forEach((lib) => {
       const libId = lib.Id;
+      if (libId && disabledTop10Libs.has(String(libId).replace(/-/g, "").toLowerCase())) return;
       const libName = (lib.Name || "Séries").trim();
       const lowerName = libName.toLowerCase();
 

@@ -1,4 +1,4 @@
-import { getAdminTargetProfile, getConfig, getDeviceProfileAuto, normalizeDisabledHomeSections, normalizeManagedCardTitleDisplayMode, normalizeManagedHomeSectionOrder, normalizeSettingsHotkey, publishAdminSnapshotIfForced, SETTINGS_HOTKEY_DEFAULT } from "../config.js";
+import { getAdminTargetProfile, getConfig, getDeviceProfileAuto, normalizeDisabledHomeSections, normalizeLibraryIdList, normalizeManagedCardTitleDisplayMode, normalizeManagedHomeSectionOrder, normalizeSettingsHotkey, publishAdminSnapshotIfForced, SETTINGS_HOTKEY_DEFAULT } from "../config.js";
 import { updateConfig } from "../configPersistence.js";
 import { loadCSS } from "../playerStyles.js";
 import { updateSlidePosition } from '../positionUtils.js';
@@ -696,6 +696,11 @@ const USER_ONLY_KEYS = [
             studioHubsHidden: useGlobalStudioHubsVisibility ? studioHubsHiddenValue : undefined,
             managedHomeSectionOrder: managedHomeSectionOrderValue,
             disabledHomeSections: disabledHomeSectionsValue,
+            disabledTop10SeriesLibraries: (() => {
+              const raw = formData.get('disabledTop10SeriesLibraries');
+              if (raw === null || raw === undefined) return normalizeLibraryIdList(config?.disabledTop10SeriesLibraries);
+              return normalizeLibraryIdList(raw);
+            })(),
 
             enableGenreHubs: formData.get('enableGenreHubs') === 'on',
             showGenreHubsHeroCards: formData.get('showGenreHubsHeroCards') === 'on',

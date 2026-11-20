@@ -3,6 +3,7 @@ import {
   getDeviceProfileAuto,
   isNativeHomeSectionOrderKey,
   normalizeDisabledHomeSections,
+  normalizeLibraryIdList,
   normalizeManagedCardTitleDisplayMode,
   normalizeManagedHomeSectionOrder
 } from "../config.js";
@@ -13,7 +14,7 @@ import {
 } from "../homeSectionNative.js";
 import { createCheckbox, createSection, createNumberInput } from "./shared.js";
 import { applySettings } from "./applySettings.js";
-import { fetchItemDetails, makeApiRequest } from "../../../Plugins/JMSFusion/runtime/api.js";
+import { fetchItemDetails, getSessionInfo, makeApiRequest } from "../../../Plugins/JMSFusion/runtime/api.js";
 import {
   JMS_STUDIO_HUB_MANUAL_ENTRY_ADDED_EVENT,
   buildStudioHubLogoUrl,
@@ -3030,6 +3031,13 @@ export function createStudioHubsPanel(config, labels) {
     "Desmarque uma seção para escondê-la da página inicial sem perder a posição dela. Clique em Salvar para aplicar.";
   managedOrderSection.appendChild(toggleHint);
 
+  const disabledTop10LibsHidden = createHiddenInput(
+    'disabledTop10SeriesLibraries',
+    JSON.stringify(normalizeLibraryIdList(config.disabledTop10SeriesLibraries))
+  );
+  managedOrderSection.appendChild(disabledTop10LibsHidden);
+  mountTop10SeriesLibraryToggles(managedOrderList, disabledTop10LibsHidden, labels);
+
   managedOrderList.addEventListener("dnd:toggle", () => {
     const off = [...managedOrderList.querySelectorAll(".dnd-item")]
       .filter((li) => li.dataset.enabled === "0")
@@ -3066,6 +3074,72 @@ export function createStudioHubsPanel(config, labels) {
   panel.appendChild(managedOrderSection);
 
   return panel;
+}
+
+// "Top 10 Série" gera uma fileira por biblioteca de séries; aqui cada uma ganha seu interruptor.
+function mountTop10SeriesLibraryToggles(list, hiddenInput, labels) {
+  const li = list?.querySelector?.('.dnd-item[data-name="top10SeriesRows"]');
+  if (!li) return;
+  li.style.flexWrap = "wrap";
+
+  const sub = document.createElement("div");
+  sub.className = "dnd-sublist";
+  sub.style.flexBasis = "100%";
+  sub.style.display = "flex";
+  sub.style.flexWrap = "wrap";
+  sub.style.alignItems = "center";
+  sub.style.gap = "4px 14px";
+  sub.style.padding = "4px 0 2px 26px";
+  sub.style.fontSize = "0.85em";
+  sub.textContent = labels?.top10SeriesLibrariesLoading || "Carregando bibliotecas de séries…";
+  li.appendChild(sub);
+
+  const readDisabled = () => {
+    try { return new Set(normalizeLibraryIdList(JSON.parse(hiddenInput.value || "[]"))); } catch { return new Set(); }
+  };
+
+  (async () => {
+    try {
+      const { userId } = getSessionInfo();
+      const data = await makeApiRequest(`/Users/${userId}/Views`);
+      const libs = (Array.isArray(data?.Items) ? data.Items : [])
+        .filter((item) => item?.Id && item.CollectionType === "tvshows");
+      sub.replaceChildren();
+      if (!libs.length) {
+        sub.textContent = labels?.top10SeriesNoLibraries || "Nenhuma biblioteca de séries encontrada.";
+        return;
+      }
+      const caption = document.createElement("span");
+      caption.style.opacity = "0.8";
+      caption.textContent = labels?.top10SeriesLibrariesCaption || "Uma fileira por biblioteca:";
+      sub.appendChild(caption);
+
+      const disabled = readDisabled();
+      libs.forEach((lib) => {
+        const id = normalizeLibraryIdList([lib.Id])[0];
+        if (!id) return;
+        const label = document.createElement("label");
+        label.style.display = "inline-flex";
+        label.style.alignItems = "center";
+        label.style.gap = "4px";
+        label.style.cursor = "pointer";
+        const box = document.createElement("input");
+        box.type = "checkbox";
+        box.checked = !disabled.has(id);
+        box.addEventListener("change", () => {
+          const set = readDisabled();
+          if (box.checked) set.delete(id); else set.add(id);
+          hiddenInput.value = JSON.stringify([...set]);
+        });
+        const text = document.createElement("span");
+        text.textContent = `Top 10 ${String(lib.Name || "").trim()}`;
+        label.append(box, text);
+        sub.appendChild(label);
+      });
+    } catch (e) {
+      sub.textContent = labels?.top10SeriesLibrariesError || "Não foi possível carregar as bibliotecas de séries.";
+    }
+  })();
 }
 
 async function fetchGenresForSettings(ctrl) {

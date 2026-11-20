@@ -9,6 +9,14 @@
     "imageUrl": "https://raw.githubusercontent.com/lucas-TagDev/FlepFlixFyn/main/img/flepflixfyn-logo.png",
     "versions": [
       {
+        "version": "1.0.1.1",
+        "changelog": "v1.0.1.1 - Top 10 por biblioteca\n- No Layout das Seções da Página Inicial, o item Top 10 Série agora mostra um interruptor para cada biblioteca de séries (ex.: Top 10 Dramas Asiáticos, Top 10 Animes), para ligar ou desligar cada fileira.\n- Inclui tudo da v1.0.1.0 (Saindo do Catálogo e interruptores por seção).",
+        "targetAbi": "12.0.0.0",
+        "sourceUrl": "https://github.com/lucas-TagDev/FlepFlixFyn/releases/download/v1.0.1.1/FlepFlixFyn-1.0.1.1.zip",
+        "checksum": "7b9140350e701fe4443f191d64e0dd4b",
+        "timestamp": "2026-11-21T12:00:00Z"
+      },
+      {
         "version": "1.0.1.0",
         "changelog": "v1.0.1.0 - Saindo do Catálogo e controle das seções\n- Nova aba Saindo do Catálogo: monte seções na página inicial (ex.: filmes e séries) com os títulos que vão sair do catálogo.\n- Busque, marque e adicione títulos; escolha uma mensagem para cada um (ex.: Última semana para aproveitar) e uma data de saída opcional.\n- Títulos com data de saída vencida somem sozinhos.\n- Interruptor Ativada/Desativada para cada seção no Layout das Seções da Página Inicial, inclusive as seções nativas do Jellyfin.\n- Desenvolvedor: lucas-TagDev.",
         "targetAbi": "12.0.0.0",

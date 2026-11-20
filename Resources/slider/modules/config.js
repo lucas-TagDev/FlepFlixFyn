@@ -26,6 +26,24 @@ export const NATIVE_HOME_SECTION_ORDER_PREFIX = "native:";
 
 const MANAGED_HOME_SECTION_ORDER_SET = new Set(DEFAULT_MANAGED_HOME_SECTION_ORDER);
 
+/** IDs de bibliotecas de séries cuja fileira "Top 10" foi desativada. */
+export function normalizeLibraryIdList(value = null) {
+  let list = value;
+  if (typeof list === "string") {
+    try { list = JSON.parse(list); } catch { list = list.split(","); }
+  }
+  if (!Array.isArray(list)) return [];
+  const seen = new Set();
+  const out = [];
+  for (const entry of list) {
+    const id = String(entry || "").trim().replace(/-/g, "").toLowerCase();
+    if (!id || !/^[a-z0-9]+$/.test(id) || seen.has(id)) continue;
+    seen.add(id);
+    out.push(id);
+  }
+  return out;
+}
+
 /** Lista de seções da página inicial que o usuário desativou na tela de ordenação. */
 export function normalizeDisabledHomeSections(value = null) {
   let list = value;
@@ -1098,6 +1116,13 @@ export function getConfig() {
         return Array.isArray(arr)
           ? arr.map(x => String(x || '').trim()).filter(Boolean)
           : [];
+      } catch {
+        return [];
+      }
+    })(),
+    disabledTop10SeriesLibraries: (() => {
+      try {
+        return normalizeLibraryIdList(localStorage.getItem('disabledTop10SeriesLibraries'));
       } catch {
         return [];
       }

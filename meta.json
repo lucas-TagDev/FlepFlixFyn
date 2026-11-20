@@ -3,13 +3,13 @@
   "description": "Plugin FlepFlixFyn — Injeta experiência visual premium no Jellyfin com tema roxo, layout Netflix e localização PT-BR completa. Desenvolvido por lucas-TagDev (baseado no JMSFusion).",
   "name": "FlepFlixFyn",
   "owner": "lucas-TagDev",
-  "version": "1.0.1.0",
+  "version": "1.0.1.1",
   "status": "Active",
   "autoUpdate": true,
   "targetAbi": "12.0.0.0",
   "sourceUrl": "https://github.com/lucas-TagDev/FlepFlixFyn",
-  "imagePathLinux": "/var/lib/jellyfin/plugins/FlepFlixFyn_1.0.1.0/icon.png",
-  "imagePathWindows": "%ProgramData%/Jellyfin/Server/plugins/FlepFlixFyn_1.0.1.0/icon.png",
-  "timestamp": "2026-11-21T00:00:00Z",
+  "imagePathLinux": "/var/lib/jellyfin/plugins/FlepFlixFyn_1.0.1.1/icon.png",
+  "imagePathWindows": "%ProgramData%/Jellyfin/Server/plugins/FlepFlixFyn_1.0.1.1/icon.png",
+  "timestamp": "2026-11-21T12:00:00Z",
   "guid": "d9b7f2a1-3c4e-4f80-b6d2-9e1a5c0f8b34"
 }
