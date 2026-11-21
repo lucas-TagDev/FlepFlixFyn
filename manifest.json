@@ -9,6 +9,14 @@
     "imageUrl": "https://raw.githubusercontent.com/lucas-TagDev/FlepFlixFyn/main/img/flepflixfyn-logo.png",
     "versions": [
       {
+        "version": "1.0.1.2",
+        "changelog": "v1.0.1.2 - Ajuste visual do Saindo do Catálogo\n- A seção agora tem o mesmo recuo lateral e o mesmo tamanho de cartão das outras fileiras.\n- Nota e tipo voltaram para o topo do cartão; a mensagem e a data de saída aparecem logo abaixo, sem cobrir o logo do título.",
+        "targetAbi": "12.0.0.0",
+        "sourceUrl": "https://github.com/lucas-TagDev/FlepFlixFyn/releases/download/v1.0.1.2/FlepFlixFyn-1.0.1.2.zip",
+        "checksum": "4fb6595affe81060d14cb307435120c4",
+        "timestamp": "2026-11-21T18:00:00Z"
+      },
+      {
         "version": "1.0.1.1",
         "changelog": "v1.0.1.1 - Top 10 por biblioteca\n- No Layout das Seções da Página Inicial, o item Top 10 Série agora mostra um interruptor para cada biblioteca de séries (ex.: Top 10 Dramas Asiáticos, Top 10 Animes), para ligar ou desligar cada fileira.\n- Inclui tudo da v1.0.1.0 (Saindo do Catálogo e interruptores por seção).",
         "targetAbi": "12.0.0.0",

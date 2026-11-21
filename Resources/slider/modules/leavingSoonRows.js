@@ -61,27 +61,44 @@ function ensureStyles() {
   const style = document.createElement("style");
   style.id = "jms-leaving-soon-rows-style";
   style.textContent = `
-    .leaving-soon-section .ls-card-badge {
-      position: absolute; left: 0; right: 0; top: 0; z-index: 3;
-      display: flex; flex-direction: column; align-items: flex-start; gap: 3px;
-      padding: 8px 8px 18px;
-      background: linear-gradient(180deg, rgba(10,6,24,.88) 0%, rgba(10,6,24,.55) 60%, rgba(10,6,24,0) 100%);
+    [id^="${SECTION_PREFIX}"] {
+      display: flex; flex-direction: column; gap: 1vh;
+      padding-inline: 3.2%; position: relative;
+      --jms-row-gap: 18px;
+      --jms-row-gap-tablet: 16px;
+      --jms-row-gap-mobile: 12px;
+      --jms-card-width: clamp(210px,16.6vw,300px);
+      --jms-card-width-tablet: clamp(185px,27vw,250px);
+      --jms-card-width-mobile: minmax(166px,186px);
+      --jms-card-width-mobile-sm: minmax(166px,186px);
+      --jms-card-width-tv: clamp(240px,20.5vw,320px);
+      --jms-card-radius: 18px;
+      --jms-card-radius-tv: 20px;
+    }
+    .leaving-soon-card .ls-top-shade {
+      position: absolute; left: 0; right: 0; top: 0; height: 38%; z-index: 1;
+      background: linear-gradient(180deg, rgba(10,6,24,.78) 0%, rgba(10,6,24,.35) 55%, rgba(10,6,24,0) 100%);
       pointer-events: none;
     }
-    .leaving-soon-section .ls-card-badge-msg {
-      display: inline-flex; align-items: center; gap: 5px; max-width: 100%;
-      padding: 4px 9px; border-radius: 999px;
+    .leaving-soon-card .ls-card-badge {
+      flex-basis: 100%; min-width: 0;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+      pointer-events: none;
+    }
+    .leaving-soon-card .ls-card-badge-msg {
+      max-width: 100%; box-sizing: border-box;
+      padding: 4px 9px; border-radius: 10px;
       background: linear-gradient(135deg, #7a5cff 0%, #b04bff 100%);
-      color: #fff; font-weight: 700; font-size: .78em; line-height: 1.2;
+      color: #fff; font-weight: 700; font-size: 12px; line-height: 1.25;
       box-shadow: 0 2px 10px rgba(122,92,255,.45);
-      border-radius: 10px; overflow: hidden;
+      overflow: hidden; text-overflow: ellipsis;
       display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
     }
-    .leaving-soon-section .ls-card-badge-date {
-      padding: 2px 8px; border-radius: 6px; background: rgba(0,0,0,.6);
-      color: #fff; font-size: .72em; font-weight: 600;
+    .leaving-soon-card .ls-card-badge-date {
+      padding: 2px 8px; border-radius: 6px; background: rgba(0,0,0,.65);
+      color: #fff; font-size: 11px; font-weight: 600; line-height: 1.4;
     }
-    .leaving-soon-section .ls-card-badge-date.is-urgent { background: rgba(220,38,38,.85); }
+    .leaving-soon-card .ls-card-badge-date.is-urgent { background: rgba(220,38,38,.88); }
     .leaving-soon-section .ls-title-icon { margin-right: .4em; color: #9978ff; }
   `;
   document.head.appendChild(style);
@@ -142,12 +159,13 @@ function createCard(item, entry, serverId, aboveFold) {
   card.innerHTML = `
     <div class="cardBox">
       <a class="cardLink" href="${href}">
-        <div class="cardImageContainer" style="position:relative">
+        <div class="cardImageContainer">
           <img class="cardImage" alt="${escapeHtml(name)}" loading="${aboveFold ? "eager" : "lazy"}" decoding="async">
-          ${buildBadge(entry)}
-          <div class="prc-top-badges" style="top:auto;bottom:62px">
+          <div class="ls-top-shade"></div>
+          <div class="prc-top-badges">
             ${rating}
             <div class="prc-type-badge">${faIconHtml(typeIsSeries ? "tv" : "film", "prc-type-icon")} ${typeLabel}</div>
+            ${buildBadge(entry)}
           </div>
           <div class="prc-gradient"></div>
           <div class="prc-overlay">
