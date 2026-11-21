@@ -18,6 +18,12 @@ namespace Jellyfin.Plugin.JMSFusion.Controllers
 
         private static string NormalizeProfile(string? p)
         {
+            // FlepFlixFyn: celular e computador compartilham as mesmas configurações.
+            if (JMSFusionPlugin.Instance?.Configuration?.SameSettingsOnAllDevices != false)
+            {
+                return "desktop";
+            }
+
             p = (p ?? "").Trim().ToLowerInvariant();
             return (p == "mobile" || p == "m") ? "mobile" : "desktop";
         }

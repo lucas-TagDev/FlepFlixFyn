@@ -29,6 +29,7 @@ namespace Jellyfin.Plugin.JMSFusion.Controllers
             [JsonPropertyName("scriptDirectory")] public string? ScriptDirectory { get; set; }
             [JsonPropertyName("playerSubdir")]    public string? PlayerSubdir { get; set; }
             [JsonPropertyName("forceGlobalUserSettings")] public bool? ForceGlobalUserSettings { get; set; }
+            [JsonPropertyName("sameSettingsOnAllDevices")] public bool? SameSettingsOnAllDevices { get; set; }
             [JsonPropertyName("enablePhysicalIndexHtmlPatchFallback")] public bool? EnablePhysicalIndexHtmlPatchFallback { get; set; }
             [JsonPropertyName("userCategoryExclusions")] public Dictionary<string, List<string>>? UserCategoryExclusions { get; set; }
         }
@@ -45,6 +46,8 @@ namespace Jellyfin.Plugin.JMSFusion.Controllers
                 if (req.PlayerSubdir != null)    cfg.PlayerSubdir    = req.PlayerSubdir.Trim();
                 if (req.ForceGlobalUserSettings.HasValue)
                     cfg.ForceGlobalUserSettings = req.ForceGlobalUserSettings.Value;
+                if (req.SameSettingsOnAllDevices.HasValue)
+                    cfg.SameSettingsOnAllDevices = req.SameSettingsOnAllDevices.Value;
                 if (req.EnablePhysicalIndexHtmlPatchFallback.HasValue)
                     cfg.EnablePhysicalIndexHtmlPatchFallback = req.EnablePhysicalIndexHtmlPatchFallback.Value;
                 if (req.UserCategoryExclusions != null)

@@ -72,7 +72,7 @@ namespace Jellyfin.Plugin.JMSFusion.Controllers
                 plugin.UpdateConfiguration(cfg);
             }
 
-            var prof = NormalizeProfile(profile);
+            var prof = ResolveRequestProfile(profile);
             var userId = userCheck.UserId.ToString("D");
             var entry = cfg.StudioHubVisibilityEntries.FirstOrDefault(item =>
                 string.Equals(item?.UserId, userId, StringComparison.OrdinalIgnoreCase) &&
@@ -108,7 +108,7 @@ namespace Jellyfin.Plugin.JMSFusion.Controllers
             var visibilitySanitized = SanitizeStudioHubVisibilityEntries(cfg);
             var allowedNames = BuildAllowedStudioHubNameSet(cfg);
 
-            var prof = NormalizeProfile(request?.Profile ?? profile);
+            var prof = ResolveRequestProfile(request?.Profile ?? profile);
             var userId = userCheck.UserId.ToString("D");
             var existing = cfg.StudioHubVisibilityEntries.FirstOrDefault(item =>
                 string.Equals(item?.UserId, userId, StringComparison.OrdinalIgnoreCase) &&
@@ -593,6 +593,20 @@ namespace Jellyfin.Plugin.JMSFusion.Controllers
         private static string NormalizeCollectionName(string? value)
         {
             return string.Join(" ", (value ?? string.Empty).Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries));
+        }
+
+        /// <summary>
+        /// FlepFlixFyn: com "mesmas configurações em todos os dispositivos" ativo,
+        /// o celular usa as mesmas preferências de coleções do computador.
+        /// </summary>
+        private static string ResolveRequestProfile(string? value)
+        {
+            if (JMSFusionPlugin.Instance?.Configuration?.SameSettingsOnAllDevices != false)
+            {
+                return "desktop";
+            }
+
+            return NormalizeProfile(value);
         }
 
         private static string NormalizeProfile(string? value)

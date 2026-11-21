@@ -432,6 +432,8 @@
     view.querySelector("#playerSub").value = cfg.playerSubdir || "modules/player";
     const fg = view.querySelector("#forceGlobal");
     if (fg) fg.checked = !!cfg.forceGlobalUserSettings;
+    const same = view.querySelector("#sameSettingsOnAllDevices");
+    if (same) same.checked = cfg.sameSettingsOnAllDevices !== false;
     return cfg;
   }
 
@@ -450,6 +452,7 @@
       scriptDirectory: view.querySelector("#scriptDir").value.trim(),
       playerSubdir: view.querySelector("#playerSub").value.trim(),
       forceGlobalUserSettings: !!view.querySelector("#forceGlobal")?.checked,
+      sameSettingsOnAllDevices: view.querySelector("#sameSettingsOnAllDevices")?.checked !== false,
       userCategoryExclusions: view.__userCategoryExclusions || {}
     };
 
@@ -625,7 +628,7 @@
       },
       {
         label: "Recursos Incorporados",
-        value: statusBadge(s.usingEmbedded ? "Sim (FlepFlixFyn Edition v1.0.1.2)" : "Não", "is-good")
+        value: statusBadge(s.usingEmbedded ? "Sim (FlepFlixFyn Edition v1.0.1.3)" : "Não", "is-good")
       },
       {
         label: "Caminho do Player",

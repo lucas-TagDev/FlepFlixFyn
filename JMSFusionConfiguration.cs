@@ -13,6 +13,13 @@ namespace Jellyfin.Plugin.JMSFusion
         [JsonPropertyName("forceGlobalUserSettings")]
         public bool ForceGlobalUserSettings { get; set; } = false;
 
+        /// <summary>
+        /// FlepFlixFyn: quando ativo, celular e computador usam o mesmo conjunto de
+        /// configurações (o perfil "desktop"), em vez de perfis separados.
+        /// </summary>
+        [JsonPropertyName("sameSettingsOnAllDevices")]
+        public bool SameSettingsOnAllDevices { get; set; } = true;
+
         [JsonPropertyName("globalUserSettingsJsonDesktop")]
         public string GlobalUserSettingsJsonDesktop { get; set; } = "{}";
 
